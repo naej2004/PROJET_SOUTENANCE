@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'Client/CSS/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'Client/CSS/test.css' %}" />
+    <link rel="stylesheet" href="{% static 'Client/CSS/css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <title>Recherchez votre voiture</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li class="checked"><a href="{% url 'myapp:home_preview' %}" class=""><ion-icon name="home-sharp"></ion-icon> Home</a></li>
+          <li class="checked"><a href="{% url 'myapp:search_preview' %}" class=""><ion-icon name="car-sport-outline"></ion-icon> Louer une voiture</a></li>
+          <li class=""><a href="{% url 'myapp:register' %}" class=""><ion-icon name="person-circle-outline"></ion-icon> Se Connecter</a></li>
+          <li class=""><a href="{% url 'myapp:SignUp' %}" class=""><ion-icon name="person-add"></ion-icon> S'inscrire</a></li>
+        </ul>
+        <img src="{% static 'Global/Images/logo.png' %}" alt="logo" />
+      </nav>
+    </header>
+    <section>
+      <div class="container">
+        <form action="{% url 'myapp:recherche_preview' %}" method="post">
+          {% csrf_token %}
+          <ion-icon name="search-sharp" class="fa"></ion-icon>
+          <input type="search" name="search_car"placeholder="What you are looking for ?" required />
+          <button type="submit" name="submit">Rechercher</button>
+        </form>
+      </div>
+    </section>
+    </section>
+    <section>
+      {% block content %}
+        {% if search_car%}
+          <h3>Résultats de la recherche pour "{{ search_car }}"</h3>
+        {% endif %}
+        {% if Voitures %}
+          <div class="image-grid">
+            {% for voiture in Voitures %}
+              <div class="image-container">
+                <div class="car">
+                  <a href="#" class="louer" id="register" title="Cliquez pour plus d'informations">
+                    <img src="{{ voiture.image_set.first.Image_voiture.url }}" alt="" />
+                  </a>
+                  <div class="car-info">
+                    <h2>{{ voiture.Modele }}</h2>
+                    <p>Vitesse: {{voiture.vitesse}} km/h</p>
+                    <p>Prix de location (jour) : {{ voiture.Prix_location_jour}} FCFA </p>
+                    <p>Kilométrage autorisé:
+                      {% if voiture.Killometrage == "Illimité" %}
+                        {{voiture.Killometrage}}
+                      {% else %}
+                        {{voiture.Killometrage}} km/h
+                      {% endif %}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          {% if search_car%}
+            <h3>Aucun résultat trouvé.</h3> 
+          {% endif %}
+        {% endif %}
+      {% endblock %}
+    </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Récupère les éléments du DOM
+            const registerLink = document.getElementById('register');
+            // Ajoute des écouteurs d'événements
+            registerLink.addEventListener('click', () => {
+                alert("CONNECTEZ-VOUS POUR EFFECTUER CETTE ACTION !!");
+            });
+        });
+    </script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+  </body>
+</html>

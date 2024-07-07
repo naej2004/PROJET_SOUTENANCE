@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'Client/CSS/carrousel.css' %}" />
+    <link rel="stylesheet" href="{% static 'Client/CSS/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'Client/CSS/styles.css' %}" />
+    <link rel="stylesheet" href="{% static 'Client/CSS/css/style.css' %}" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    />
+    <title>Louer votre</title>
+  </head>
+  <body>
+    {% include 'Client/header.html' %}
+    <main class="info_car">
+      <div class="image-column">
+        <div class="carousel">
+          <div class="carousel-container">
+            {% for image in Voiture.image_set.all %}
+              <div class="carousel-slide">
+                <img src="{{ image.Image_voiture.url }}" />
+              </div>
+            {% endfor %}
+          </div>
+          <button class="prev-button">Précédent</button>
+          <button class="next-button">Suivant</button>
+        </div>
+      </div>
+
+      <div class="info-column">
+        <span><img class="ui" src="{{ Voiture.Administrateur_idAdministrateur.Image.url }}" alt=""></span>
+        <span>Contact du propriétaire : </span><span class="value"><b><a href="tel:{{Voiture.Administrateur_idAdministrateur.Numero_tel}}">{{Voiture.Administrateur_idAdministrateur.Numero_tel}}</a></b></span>
+        <span>Nom de la voiture : </span><span class="value">{{Voiture.Modele}}</span>
+        <span>Prix de la location (par jour) : </span><span class="value">{{Voiture.Prix_location_jour}} FCFA</span>
+        <span>Kilométrage de la voiture : </span><span class="value">
+        {% if voiture.Killometrage == "Illimité" %}
+          {{Voiture.Killometrage}}
+        {% else %}
+        {{Voiture.Killometrage}} km/h
+        {% endif %}
+      </span>
+        <span>Vitesse de la voiture : </span><span class="value">{{Voiture.vitesse}} km/h</span>
+        <span>Documents requis : </span><span class="value">{{Voiture.Document_requis}}</span>
+        <form action="{% url 'myapp:louer' Voiture.idVoiture %}" method="post">
+          {% csrf_token %}
+          <label for="nbre_jour">Nombre de jours : </label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="number" name="nbre_jour" id="nbre_jour" required> <br>
+          <label for="note_car">Notez la voiture (/5) : </label><input type="number" name="note_car" id="note_car" required><br>
+          <input type="checkbox" name="1" id="" required />&nbsp;&nbsp;<span
+            class="forced"
+            >J'ai lu et J'accepte les
+            <a href="#" id="openPopupLink"
+              >conditions d'utilisataion generales</a
+            >
+            (IMPORTANT) !!</span
+          >
+          <input type="submit" class="validate-button" value="VALIDER" />
+          <div class="popup" id="popup">
+            <div class="popup-content">
+              <span class="close" id="closePopup">&times;</span>
+              <h2>Conditon d'utilisataion generales</h2>
+              <p>
+                {% lorem 2 %}
+              </p>
+            </div>
+          </div>
+        </form>
+      </div>
+    </main>
+    <div class="button-validate"></div>
+    {% include 'Client/footer.html' %}
+    <script src="{% static 'Client/JS/script.js' %}"></script>
+    <script src="{% static 'Client/JS/carrousel.js' %}"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+  </body>
+</html>
